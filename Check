@@ -66,4 +66,3 @@ public class Check extends StandBank
 		return str;			// RETURNS STRING REPRESENTATION OF OBJECT
 	}
 }
-// Come back to this program to make sure that you did inheritance properly
