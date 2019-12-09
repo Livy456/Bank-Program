@@ -1,0 +1,69 @@
+/******************************************/
+/* USER DESCRIPTION SECTION 			  */
+/* OLIVIA DIAS				   			  */
+/* CHAPTER 11 PROJECT 11-5			   	  */
+/* PROGRAM 10							  */
+/* DECEMBER 6, 2019		   				  */
+/******************************************/
+/******************************************/
+/* THIS IS A PROGRAM TO MAKE AN OBJECT	  */
+/* HAVE INSTANCE VARIABLES, CONSTRUCTORS, */
+/* AND METHODS SO THE CLIENT CAN INPUT	  */
+/* THEIR NAME, BALANCE, AND HOW MUCH 	  */
+/* THEY WANT TO DEPOSIT OR WITHDRAW AND   */
+/* EXTENDS STANDBANK					  */
+/******************************************/ 
+
+public class Check extends StandBank
+{
+	public double getAddBal()
+	/****************************************************/
+	/* PRECONDITION - PROGRAM HAS A BALANCE AND DEPOSIT */
+	/* POSTCONDITION - FUNCTION RETURNS BALANCE   		*/
+	/****************************************************/
+	{
+		balance += deposit;		// GETS DEPOSIT ADDED TO BALANCE
+						
+		/******************/
+		/* RETURN SECTION */
+		/******************/ 
+		return balance;			// RETURNS BALANCE
+	}
+	
+	public double getSubWd()
+	/*****************************************************/
+	/* PRECONDITION - PROGRAM HAS A BALANCE AND WITHDRAW */
+	/* POSTCONDITION - FUNCTION RETURNS BALANCE   		 */
+	/*****************************************************/
+	{
+		balance -= withdraw;	// GETS WITHDRAW SUBTRACTED FROM BALANCE
+				
+		/******************/
+		/* RETURN SECTION */
+		/******************/ 
+		return balance;			// RETURNS BALANCE
+	}
+	
+	public String toString ()
+	/********************************************************/
+	/* OVERRIDES THE TOSTRING IN THE PARENT CLASS STANDBANK */
+	/* AND CREATES A STRING REPRESENTATION OF THIS OBJECT   */
+	/********************************************************/
+	{
+		/********************/
+		/* VARIABLE SECTION */
+		/********************/
+		String str; 	// STRING REPRESENTATION OF OBJECT
+		
+		/*****************************************/
+		/* MAKES STRING REPRESENTATION OF OBJECT */
+		/*****************************************/
+		str = super.toString();
+		
+		/******************/
+		/* RETURN SECTION */
+		/******************/ 
+		return str;			// RETURNS STRING REPRESENTATION OF OBJECT
+	}
+}
+// Come back to this program to make sure that you did inheritance properly
