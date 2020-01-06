@@ -14,6 +14,14 @@
 /* EXTENDS STANDBANK					  */
 /******************************************/ 
 
+/******************/
+/* IMPORT SECTION */
+/******************/
+import javax.swing.*;			// IMPORTS SWING
+import java.awt.*;				// IMPORTS AWT
+import java.awt.event.*;		// IMPORTS A LISTENER EVENT
+import java.text.DecimalFormat;	// IMPORTS DECIMAL FORMAT
+
 public class Check extends StandBank
 {
 	public double getAddBal()
@@ -64,5 +72,5 @@ public class Check extends StandBank
 		/* RETURN SECTION */
 		/******************/ 
 		return str;			// RETURNS STRING REPRESENTATION OF OBJECT
-	}
+	}	
 }
