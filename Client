@@ -1,0 +1,846 @@
+/*****************************************/
+/* THIS IS A PROGRAM TO HAVE USER INPUT	 */
+/* THEIR NAME, BALANCE, AND HOW MUCH 	 */
+/* THEY WANT TO DEPOSIT OR WITHDRAW, AND */
+/* USE EITHER A CHECKING, SAVING, OR  	 */
+/* CREDIT ACCOUNTS						 */
+/*****************************************/
+
+/******************/
+/* IMPORT SECTION */
+/******************/
+import javax.swing.*;				// IMPORTS JOPTION
+import java.text.DecimalFormat;		// IMPORTS DECIMAL FORMAT
+
+public class MainBank 
+{
+	/*****************/
+	/* FINAL SECTION */
+	/*****************/
+	final static String message1 = "Input balance: $";
+	final static String message2 = "Input deposit: $";
+	final static String message3 = "Input withdraw: $";
+	final static String message4 = "Input interest rate: " + "%"; 
+	final static String message5 = "Input how long you want to compound your money(years): ";
+	final static String message6 = "Input the amount of money you want to withdraw to spend: $";
+	final static String message7 = "Input the amount of money you want to deposit back to the bank: $";
+	final static String message8 = "Input your credit limit: $";
+	final static String heading1 = "Input Balance";
+	final static String heading2 = "Input Deposit";
+	final static String heading3 = "Input Withdraw";
+	final static String heading4 = "Input Interest Rate";
+	final static String heading5 = "Input Time";
+	final static String heading8 = "Input Credit Limit";
+	final static String error1 = "ERROR!!! Money must be positive!!!";
+	final static String error2 = "ERROR!!! Money must be positive and less than balance!!";
+	final static String error3 = "ERROR!!! Number must be postive and less than 100!!";
+	final static String error4 = "You have MAXED your credit limit";
+	
+	public static void main (String[]args)
+	{
+		/********************/
+		/* VARIABLE SECTION */
+		/********************/
+		Check check;				// OBJECT CHECK THAT REFERENCES CHECK
+		Credit credit;				// OBJECT CREDIT THAT REFERENCES CREDIT 
+		Savings save;				// OBJECT SAVE THAT REFERENCES SAVINGS 
+		DecimalFormat df;			// OBJECT DF THAT REFERENCES DECIMALFORMAT
+		String name;				// NAME OF USER
+		String account;				// TYPE OF BANK ACCOUNT SELECTE BY USER
+		double deposit;				// AMOUNT OF MONEY ADDED TO BANK ACCOUNT
+		double stbalance;			// AMOUNT OF MONEY USER STARTS WITH
+		double flbalance;			// AMOUNT OF MONEY USER ENDS WITH	
+		double withdraw;			// AMOUNT OF MONEY TAKEN OUT OF BANK ACCOUNT
+		double credLine;			// MAX NUMBER OF WITHDRAWLS MADE IN CREDIT ACCOUNT
+		int interest;				// INTEREST FOR CREDIT AND SAVINGS
+		int time;					// NUMBER OF YEARS BALANCE IS COMPOUNDED
+		int rate;					// FREQUENCY IN WHICH MONEY IS COMPOUNDED
+		int redo;					// INT RESPONSE TO RE-INPUTTING DEPOSIT AND WITHDRAW
+		int runAgain;				// INT RESPONSE TO RE-RUNNING PROGRAM
+		
+		/*******************************/
+		/* PROGRAM DESCRIPTION SECTION */
+		/*******************************/
+		programDescription();			// CALL TO PROGRAM DESCRIPTION 
+		
+		/**************************/
+		/* LOOP TO RE-RUN PROGRAM */
+		/**************************/
+		do 
+		{
+			/*************************/
+			/* INSTANTIATION SECTION */
+			/*************************/
+			check = new Check();					// INSTANTIATES CHECK, USES DEFAULT CONSTRUCTOR
+			credit = new Credit();					// INSTANTIATES CREDIT, USES DEFAULT CONSTRUCTOR
+			save = new Savings();					// INSTANTIATES SAVE, USES DEFAULT CONSTRUCTOR
+			df = new DecimalFormat("#0.00");		// INSTANTIATES DF, ASSIGNS DECIMAL PRECISION OF TWO
+			
+			/*****************/
+			/* INPUT SECTION */
+			/*****************/
+			
+			/***************/
+			/* INPUTS NAME */
+			/***************/
+			name = inputString();		// CALL TO INPUT STRING
+						
+			/******************/
+			/* INPUTS ACCOUNT */
+			/******************/
+			account = optionAccount(name);	// CALL TO OPTIONS MENU FOR CHOOSING TYPE OF BANK ACCOUNT
+			
+			check.setName(name);			// CALL TO NAME SET METHOD IN CHECK
+			credit.setName(name);			// CALL TO NAME SET METHOD IN CREDIT
+			save.setName(name);				// CALL TO NAME SET METHOD IN SAVE
+			
+			/********************************************/
+			/* IF STATEMENT TO INPUT CREDIT INFORMATION */
+			/********************************************/
+			if (account == "Credit") 
+			{
+				/******************/
+				/* INPUTS BALANCE */
+				/******************/
+				credLine = inputDouble1(message8, heading8);	// CALL TO INPUT DOUBLE
+				df.format(credLine);			// FORMATS CREDIT LINE TO PRECISION OF TWO DECIMAL PLACES
+				
+				credit.setCred(credLine);		// CALL TO SET CREDIT LINE METHOD IN CREDIT
+				
+				flbalance = 0;					// ASSIGNS FINAL BALANCE TO STARTING AMOUNT SPENT IN CREDIT ACCOUNT  
+				df.format(flbalance);			// FORMATS FLBALANCE TO PRECISION OF TWO DECIMAL PLACES
+								
+				updateWindow(account, credLine, flbalance);		// CALL TO UPDATE WINDOW METHOD
+				
+				/*****************************************/
+				/* LOOP TO RE-INPUT WITHDRAW AND DEPOSIT */
+				/*****************************************/
+				do
+				{	
+					/*******************/
+					/* INPUTS WITHDRAW */
+					/*******************/
+					withdraw = inputDouble1(message6, heading3);	// CALL TO INPUT DOUBLE
+					df.format(withdraw);			// FORMATS WITHDRAW TO PRECISION OF TWO DECIMAL PLACES		
+				
+					credit.setDeposit(withdraw);	// CALL TO SET DEPOSIT WITHDRAW IN CREDIT
+					save.getAddDep();				// CALL TO GET SUBTRACTING WITHDRAW IN SAVE
+					credit.setBalance(flbalance);		// CALL TO SET BALANCE METHOD
+					
+					updateWindow(account, credLine, flbalance);		// CALL TO UPDATE WINDOW METHOD
+					
+					/******************/
+					/* INPUTS DEPOSIT */
+					/******************/
+					deposit = inputDouble3(message7, heading2, credLine);	// CALL TO INPUT DOUBLE
+					df.format(deposit);				// FORMATS DEPOSIT TO PRECISION OF TWO DECIMAL PLACES
+				
+					credit.setWithdraw(deposit);	// CALL TO SET DEPOSIT METHOD IN CREDIT
+					save.getSubWd();				// CALL TO GET ADD DEPOSIT METHOD IN SAVE
+				
+					updateWindow(account, credLine, flbalance);		// CALL TO UPDATE WINDOW METHOD
+				
+					/*******************/
+					/* INPUTS INTEREST */
+					/*******************/
+					interest = inputInt(message4, heading4);	// CALL TO INPUT INT METHOD
+				
+					/***************/
+					/* INPUTS TIME */
+					/***************/
+					time  = inputInt(message5, heading5);		// CALL TO INPUT INT METHOD
+			
+					/***************/
+					/* INPUTS RATE */
+					/***************/
+					rate = optionRate();	// CALL TO OPTION RATE METHOD
+					
+					/***********************/
+					/* CALCULATION SECTION */
+					/***********************/
+				
+					/***************************/
+					/* CALCULATES ACCRUED DEBT */
+					/***************************/
+					flbalance = credit.getSubBal();		// CALL TO GET SUB BALANCE METHOD
+					
+					/**************************************************************/
+					/* IF STATEMENT TO CHECK IF BALANCE IS MORE THAN CREDIT LIMIT */
+					/**************************************************************/
+					if(flbalance > credLine)
+					{
+						ErrorMessage(error4);		// CALL TO ERROR MESSAGE
+					}
+				}
+				while(flbalance < credLine);
+				
+				/******************/
+				/* OUTPUT SECTION */
+				/******************/
+				outputCredit(credit, flbalance, credLine);
+			}
+			
+			/**************************************************/
+			/* ELSE IF STATEMENT TO INPUT SAVINGS INFORMATION */
+			/**************************************************/
+			else if (account == "Savings")
+			{
+				credLine = 0;		// INITALIZES CREDIT LINE SO UPDATE WINDOW METHOD CAN BE USED
+				
+				/******************/
+				/* INPUTS BALANCE */
+				/******************/
+				stbalance = inputDouble1(message1, heading1);	// CALL TO INPUT DOUBLE
+				
+				flbalance = stbalance;			// ASSIGNS FINAL BALANCE TO STARTING  
+												// BALANCE FOR FUTURE CALCULATIONS
+				df.format(flbalance);			// FORMATS FLBALANCE TO PRECISION OF TWO DECIMAL PLACES
+				
+				save.setBalance(flbalance);		// CALL TO SET BALANCE METHOD IN SAVE
+				
+				updateWindow(account, credLine, flbalance);		// CALL TO UPDATE WINDOW METHOD
+				
+				/*****************************************/
+				/* LOOP TO RE-INPUT WITHDRAW AND DEPOSIT */
+				/*****************************************/
+				do
+				{
+					/******************/
+					/* INPUTS DEPOSIT */
+					/******************/
+					deposit = inputDouble1(message2, heading2);	// CALL TO INPUT DOUBLE
+					df.format(deposit);							// FORMATS DEPOSIT TO PRECISION OF TWO DECIMAL PLACES
+				
+					save.setDeposit(deposit);		// CALL TO SET DEPOSIT METHOD IN SAVE
+					save.getAddDep();				// CALL TO GET ADD DEPOSIT METHOD IN SAVE
+				
+					updateWindow(account, credLine, flbalance);		// CALL TO UPDATE WINDOW METHOD
+				
+					/*******************/
+					/* INPUTS WITHDRAW */
+					/*******************/
+					withdraw = inputDouble2(message3, heading3, stbalance, deposit);	// CALL TO INPUT DOUBLE
+					df.format(withdraw);			// FORMATS WITHDRAW TO PRECISION OF TWO DECIMAL PLACES		
+				
+					save.setWithdraw(withdraw);		// CALL TO SET DEPOSIT WITHDRAW IN SAVE
+					save.getSubWd();				// CALL TO GET SUBTRACTING WITHDRAW IN SAVE
+				
+					updateWindow(account, credLine, flbalance);		// CALL TO UPDATE WINDOW METHOD
+				
+					/*******************/
+					/* INPUTS INTEREST */
+					/*******************/
+					interest = inputInt(message4, heading4);	// CALL TO INPUT INT METHOD
+				
+					save.setInterest(interest);		// CALL TO SET INTEREST IN SAVINGS
+				
+					/***************/
+					/* INPUTS TIME */
+					/***************/
+					time = inputInt(message5, heading5);		// CALL TO INPUT INT METHOD
+			
+					save.setTime(time);				// CALL TO SET TIME IN SAVINGS
+				
+					/***************/
+					/* INPUTS RATE */
+					/***************/
+					rate = optionRate();			// CALL TO OPTION RATE METHOD
+				
+					save.setRate(rate);				// CALL TO SET RATE IN SAVINGS
+				
+					/***********************/
+					/* CALCULATION SECTION */
+					/***********************/
+				
+					/********************************/
+					/* CALCULATES COMPOUND INTEREST */
+					/********************************/
+					save.getAddBal();				// CALL TO GET THE BALANCE METHOD IN SAVINGS
+					
+					updateWindow(account, credLine, flbalance);		// CALL TO UPDATE WINDOW METHOD
+				
+					redo = redoBank();				// CALL TO REDO BANK METHOD
+				}
+				while(redo == 0);
+				
+				/******************/
+				/* OUTPUT SECTION */
+				/******************/
+				outputSave(save, stbalance);	// CALL TO OUTPUT SAVE METHOD
+			}
+			
+			/************************************************/
+			/* ELSE STATEMENT TO CALCULATE CHECKING ACCOUNT */
+			/************************************************/
+			else
+			{
+				credLine = 0;		// INITALIZES CREDIT LINE SO UPDATE WINDOW METHOD CAN BE USED
+				
+				/******************/
+				/* INPUTS BALANCE */
+				/******************/
+				stbalance = inputDouble1(message1, heading1);	// CALL TO INPUT DOUBLE
+				
+				flbalance = stbalance;			// ASSIGNS FINAL BALANCE TO STARTING  
+												// BALANCE FOR FUTURE CALCULATIONS
+				df.format(flbalance);			// FORMATS FLBALANCE TO PRECISION OF TWO DECIMAL PLACES
+				
+				check.setBalance(flbalance);	// CALL TO SET BALANCE METHOD IN CHECK
+				
+				updateWindow(account, credLine, flbalance);		// CALL TO UPDATE WINDOW METHOD
+				
+				/******************/
+				/* INPUTS DEPOSIT */
+				/******************/
+				deposit = inputDouble1(message2, heading2);	// CALL TO INPUT DOUBLE
+				df.format(deposit);							// FORMATS DEPOSIT TO PRECISION OF TWO DECIMAL PLACES
+				
+				check.setDeposit(deposit);		// CALL TO SET DEPOSIT METHOD IN CHECK
+				
+				updateWindow(account, credLine, flbalance);		// CALL TO UPDATE WINDOW METHOD
+				
+				/*******************/
+				/* INPUTS WITHDRAW */
+				/*******************/
+				withdraw = inputDouble2(message3, heading3, stbalance, deposit);		// CALL TO INPUT DOUBLE
+				df.format(withdraw);			// FORMATS WITHDRAW TO PRECISION OF TWO DECIMAL PLACES		
+				
+				check.setWithdraw(withdraw);	// CALL TO SET DEPOSIT WITHDRAW IN CHECK
+				
+				/***********************/
+				/* CALCULATION SECTION */
+				/***********************/
+				
+				/**********************/
+				/* CALCULATES BALANCE */
+				/**********************/
+				flbalance = check.getAddBal();		// CALL TO ADDING BALANCE METHOD
+				flbalance = check.getSubWd();		// CALL TO SUBTRACTING WITHDRAW METHOD
+				
+				df.format(flbalance);				// FORMATS BALANCE TO PRECISION OF TWO DECIMAL PLACES
+				
+				check.setBalance(flbalance);		// CALL TO SET BALANCE METHOD IN CHECK
+				
+				/******************/
+				/* OUTPUT SECTION */
+				/******************/
+				outputCheck(check, stbalance);		// CALL TO OUTPUT CHECK
+			}
+	
+			runAgain = runAgain();		// CALL TO RUN PROGRAM AGAIN
+		}
+		while(runAgain == 0);
+	}
+	/******************************************************************************/
+	/* 								FUNCTION SECTION 							  */
+	/******************************************************************************/
+	public static void ErrorMessage(String str)
+	/*********************************************************************/
+	/* PRECONDITION - NEEDS ERROR MESSAGE FOR INPUTS OF NEGATIVE NUMBERS */
+	/* POSTCONDITION - CREATES WIMDOW TO SHOW THE ERROR THE USER MADE 	 */
+	/*********************************************************************/
+	{
+		/******************************************************/
+		/* MAKES ERROR MESSAGE WINDOW FOR BALANCE AND DEPOSIT */
+		/******************************************************/
+		JOptionPane.showMessageDialog(
+				null,
+				str,
+				"Error Message",
+				JOptionPane.ERROR_MESSAGE);
+	}
+	
+	public static double inputDouble1 (String str, String anstr)
+	/*************************************************/
+	/* PRECONDITION - NEEDS DOUBLE VALUE	 		 */
+	/* POSTCONDITION - GETS DOUBLE VALUE			 */
+	/*************************************************/
+	{
+		/********************/
+		/* VARIABLE SECTION */
+		/********************/
+		String inum;		// USED FOR REUSEABLE INPUT
+		double num;			// INPUTS NUMBER AS A STRING
+		
+		/*****************************/
+		/* LOOP UNTIL VALUE IS VALID */
+		/*****************************/
+		do
+		{	
+			/*****************************/
+			/* MAKES INPUT DIALOG WINDOW */
+			/*****************************/ 
+			inum = JOptionPane.showInputDialog(
+					null,
+					str,
+					anstr,
+					JOptionPane.QUESTION_MESSAGE);
+			num = Double.parseDouble(inum);		// ASSIGNS THE STRING IBALANCE 
+												// TO THE INTEGER BALANCE 
+			/*******************************/
+			/* IF STATEMENT TO ERROR CHECK */
+			/*******************************/
+			if (num < 0)
+			{
+				ErrorMessage(error1);		// CALL TO ERROR MESSAGE
+			}
+		}
+		while (num < 0);
+				
+		/******************/
+		/* RETURN SECTION */
+		/******************/
+		return num; 		// RETURNS NUM
+	}
+	
+	public static double inputDouble2 (String str, String anstr, 
+									   double stbalance, double deposit)
+	/*************************************************/
+	/* PRECONDITION - NEEDS DOUBLE VALUE	 		 */
+	/* POSTCONDITION - GETS DOUBLE VALUE			 */
+	/*************************************************/
+	{
+		/********************/
+		/* VARIABLE SECTION */
+		/********************/
+		String inum;		// USED FOR REUSEABLE INPUT
+		double num;			// INPUTS NUMBER AS A STRING
+		
+		/*****************************/
+		/* LOOP UNTIL VALUE IS VALID */
+		/*****************************/
+		do
+		{
+			/*****************************/
+			/* MAKES INPUT DIALOG WINDOW */
+			/*****************************/ 
+			inum = JOptionPane.showInputDialog(
+					null,
+					str,
+					anstr,
+					JOptionPane.QUESTION_MESSAGE);
+			num = Double.parseDouble(inum);		// ASSIGNS THE STRING IBALANCE 
+												// TO THE INTEGER BALANCE
+			
+			/*******************************/
+			/* IF STATEMENT TO ERROR CHECK */
+			/*******************************/
+			if ((num < 0) || (num > (stbalance + deposit)))
+			{
+				ErrorMessage(error2);	// CALL TO ERROR MESSAGE
+			}
+		}
+		while((num < 0) || (num > (stbalance + deposit)));
+		
+		/******************/
+		/* RETURN SECTION */
+		/******************/
+		return num;			// RETURNS NUM
+	}
+	
+	public static double inputDouble3(String str, String anstr, double credLine)
+	/*************************************************/
+	/* PRECONDITION - NEEDS DOUBLE VALUE	 		 */
+	/* POSTCONDITION - GETS DOUBLE VALUE			 */
+	/*************************************************/
+	{
+		/********************/
+		/* VARIABLE SECTION */
+		/********************/
+		String inum;		// USED FOR REUSEABLE INPUT
+		double num;			// INPUTS NUMBER AS A STRING
+		
+		/*****************************/
+		/* LOOP UNTIL VALUE IS VALID */
+		/*****************************/
+		do
+		{
+			/*****************************/
+			/* MAKES INPUT DIALOG WINDOW */
+			/*****************************/ 
+			inum = JOptionPane.showInputDialog(
+					null,
+					str,
+					anstr,
+					JOptionPane.QUESTION_MESSAGE);
+			num = Double.parseDouble(inum);		// ASSIGNS THE STRING IBALANCE 
+												// TO THE INTEGER BALANCE
+			
+			/*******************************/
+			/* IF STATEMENT TO ERROR CHECK */
+			/*******************************/
+			if((num < 0) || (num > credLine))
+			{
+				ErrorMessage(error2);		// CALL TO ERROR MESSAGE
+			}
+		}
+		while((num < 0) || (num > credLine));
+		
+		/******************/
+		/* RETURN SECTION */
+		/******************/
+		return num;			// RETURNS NUM
+	}
+	
+	public static int inputInt(String str, String anstr)
+	/*************************************************/
+	/* PRECONDITION - NEEDS INTEGER VALUE	 		 */
+	/* POSTCONDITION - GETS INTEGER VALUE			 */
+	/*************************************************/
+	{
+		/********************/
+		/* VARIABLE SECTION */
+		/********************/
+		String inum;		// USED FOR REUSEABLE INPUT
+		int num;			// INPUTS NUMBER AS A STRING
+		
+		/*****************************/
+		/* LOOP UNTIL VALUE IS VALID */
+		/*****************************/
+		do
+		{
+			/*****************************/
+			/* MAKES INPUT DIALOG WINDOW */
+			/*****************************/ 
+			inum = JOptionPane.showInputDialog(
+					null,
+					str,
+					anstr,
+					JOptionPane.QUESTION_MESSAGE);
+			num = Integer.parseInt(inum);		// ASSIGNS THE STRING IBALANCE 
+												// TO THE INTEGER BALANCE
+			
+			/*******************************/
+			/* IF STATEMENT TO ERROR CHECK */
+			/*******************************/
+			if ((num < 0) || (num > 100))
+			{
+				ErrorMessage(error3);			// CALL TO ERROR MESSAGE
+			}
+		}
+		while((num < 0) || (num > 100));
+		
+		/******************/
+		/* RETURN SECTION */
+		/******************/
+		return num;			// RETURNS NUM
+	}
+	
+	public static String inputString()
+	/*************************************************/
+	/* PRECONDITION - NEEDS STRING VALUE FOR NAME	 */
+	/* POSTCONDITION - GETS STRING VALUE FOR NAME	 */
+	/*************************************************/
+	{
+		/********************/
+		/* VARIABLE SECTION */
+		/********************/
+		String nm;			// INPUTS NUMBER AS A STRING
+		
+		/*****************************/
+		/* MAKES INPUT DIALOG WINDOW */
+		/*****************************/ 
+		nm = JOptionPane.showInputDialog(
+				null,
+				"Input your name: ",
+				"Input Name",
+				JOptionPane.QUESTION_MESSAGE);
+		
+		/******************/
+		/* RETURN SECTION */
+		/******************/
+		return nm;			// RETURNS NUM
+	}
+	
+	public static String optionAccount (String name)
+	/*******************************************************/
+	/* PRECONDITION - NEEDS TO CHOOSE TYPE OF BANK ACCOUNT */
+	/* POSTCONDITION - GETS TO CHOOSE TYPE OF BANK ACCOUNT */
+	/*******************************************************/
+	{
+		/********************/
+		/* VARIABLE SECTION */
+		/********************/
+		String num;			// REUSUABLE STRING INPUT 
+		
+		/*************************************/
+		/* MAKES AN ARRAY FOR DROP-DOWN MENU */
+		/*************************************/
+		Object[] options = {"Checking", "Credit", "Savings"};
+		
+		/*****************************/
+		/* MAKES INPUT DIALOG WINDOW */
+		/*****************************/ 
+		num = (String)JOptionPane.showInputDialog(
+				new JDialog(),
+				"Hello, " + name + "\n" +
+				"please choose the type" + "\n" +
+				"of bank account you want to use: ",
+				"Choose Type of Bank Account",
+				JOptionPane.INFORMATION_MESSAGE,
+				null,
+				options,
+				"");
+		
+		/******************/
+		/* RETURN SECTION */
+		/******************/
+		return num;			// RETURNS NUM
+	}
+	
+	public static int optionRate()
+	/*******************************************************/
+	/* PRECONDITION - NEEDS TO CHOOSE RATE OF CREDIT OR    */
+	/* 				  SAVINGS ACCOUNT 					   */
+	/* POSTCONDITION - GETS TO CHOOSE TYPE OFCREDIT OR     */
+	/* 				   SAVINGS ACCOUNT					   */
+	/*******************************************************/
+	{
+		/********************/
+		/* VARIABLE SECTION */
+		/********************/
+		String num;			// REUSUABLE STRING INPUT 
+		int inum;
+		
+		/*************************************/
+		/* MAKES AN ARRAY FOR DROP-DOWN MENU */
+		/*************************************/
+		Object options[] = {"Weekly", "Bi-Weekly", "Monthly", 
+						   "Quarterly", "Annually"};
+		
+		num = (String)JOptionPane.showInputDialog(
+				new JDialog(),
+				"Choose the rate in which you compound your money:",
+				"Input Rate",
+				JOptionPane.QUESTION_MESSAGE,
+				null,
+				options,
+				"");
+		
+		/******************************************/
+		/* IF STATEMENT TO CHECK IF NUM IS WEEKLY */
+		/******************************************/
+		if (num == "Weekly")
+		{
+			inum = 52;
+		}
+		
+		/**************************************************/
+		/* ELSE IF STATEMENT TO CHECK IF NUM IS BI-WEEKLY */
+		/**************************************************/
+		else if (num == "Bi-Weekly")
+		{
+			inum = 26;
+		}
+		
+		/************************************************/
+		/* ELSE IF STATEMENT TO CHECK IF NUM IS MONTHLY */
+		/************************************************/
+		else if (num == "Monthly")
+		{
+			inum = 12;
+		}
+		
+		/**************************************************/
+		/* ELSE IF STATEMENT TO CHECK IF NUM IS QUARTERLY */
+		/**************************************************/
+		else if (num == "Quarterly")
+		{
+			inum = 4;
+		}
+		
+		/**********************************************/
+		/* ELSE STATEMENT TO CHECK IF NUM IS ANNUALLY */
+		/**********************************************/
+		else 
+		{
+			inum = 1;
+		}
+		
+		/******************/
+		/* RETURN SECTION */
+		/******************/
+		return inum;		// RETURNS INUM 
+	}
+	
+	public static void outputCheck(Check check, double stbalance)
+	/************************************************************/
+	/* PRECONDITION - NEEDS PROGRAM OUTPUT FOR CHECKING ACCOUNT */
+	/* POSTCONDITION - CREATES WIMDOW TO SHOW					*/
+	/* 				   OUTPUT STATEMENTS FOR CHECKING ACCOUNT   */
+	/************************************************************/
+	{
+		/******************/
+		/* OUTPUT SECTION */
+		/******************/
+		
+		/***********************************/
+		/* MAKES OUTPUT INFORMATION WINDOW */
+		/***********************************/
+		JOptionPane.showMessageDialog(
+				null,
+				check.toString() + 
+				"\nYour starting balance was: $" + stbalance + ".",
+				"Output Section for Checking Account",
+				JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	public static void outputCredit(Credit credit, double flbalance, double credLine)
+	/**********************************************************/
+	/* PRECONDITION - NEEDS PROGRAM OUTPUT FOR CREDIT ACCOUNT */
+	/* POSTCONDITION - CREATES WIMDOW TO SHOW				  */
+	/* 				   OUTPUT STATEMENTS FOR CREDIT ACCOUNT   */
+	/**********************************************************/
+	{
+		/******************/
+		/* OUTPUT SECTION */
+		/******************/
+		/***********************************/
+		/* MAKES OUTPUT INFORMATION WINDOW */
+		/***********************************/
+		JOptionPane.showMessageDialog(
+				null,
+				credit.toString() + 
+				"Your credit card has been denied since you owe the bank" +
+				"\n" + "$" + (flbalance - credLine),
+				"Output Section for Checking Account",
+				JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	public static void outputSave(Savings save, double stbalance)
+	/***********************************************************/
+	/* PRECONDITION - NEEDS PROGRAM OUTPUT FOR SAVINGS ACCOUNT */
+	/* POSTCONDITION - CREATES WIMDOW TO SHOW				   */
+	/* 				   OUTPUT STATEMENTS FOR SAVINGS ACCOUNT   */
+	/***********************************************************/
+	{
+		/******************/
+		/* OUTPUT SECTION */
+		/******************/
+		
+		/***********************************/
+		/* MAKES OUTPUT INFORMATION WINDOW */
+		/***********************************/
+		JOptionPane.showMessageDialog(
+				null,
+				save.toString() + 
+				"\nYou started with a starting balance of $" + stbalance + ".",
+				"Output Section for Savings Account",
+				JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	public static void programDescription()
+	/************************************************/
+	/* PRECONDITION - NEEDS PROGRAM DESCRIPTION		*/
+	/* POSTCONDITION - CREATES WINDOW TO DESCRIBE	*/
+	/* 					WHAT THE PROGRAM DOES 		*/
+	/************************************************/
+	{
+		/************************************/
+		/* MAKES PROGRAM DESCRIPTION WINDOW */
+		/************************************/
+		JOptionPane.showMessageDialog(
+				null, 
+				"This program is a program to make a checking, savings,\n" +
+				"and credit account. The user must input their name, balance,\n" +
+				"the deposit, the withdraw, credit line, interest, time, and rate\n" + 
+				"to make their bank account.",
+				"Program 10 Program Description",
+				JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	public static int redoBank()
+	/************************************************/
+	/* PRECONDITION - NEEDS CONFIRM DIALOG BOX		*/
+	/* POSTCONDITION - CREATES WIMDOW TO CONFIRM IF	*/
+	/* 				   USER WANTS TO RE-INPUT 		*/
+	/* 				   WITHDRAW AND DEPOSIT			*/
+	/************************************************/
+	{
+		/********************/
+		/* VARIABLE SECTION */
+		/********************/
+		int num;			// INTEGER ANSWER TO RE-INPUT DEPOSIT AND WITHDRAW
+		
+		/*******************************/
+		/* MAKES CONFIRM DIALOG WINDOW */
+		/*******************************/ 
+		num = JOptionPane.showConfirmDialog(
+				null,
+				"Do you want to re-input your withdraw and deposit",
+				"Re-input Withdraw and Deposit",
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE);
+		
+		/******************/
+		/* RETURN SECTION */
+		/******************/
+		return num;			// RETURNS NUM
+	}
+	
+	public static int runAgain()
+	/************************************************/
+	/* PRECONDITION - NEEDS CONFIRM DIALOG BOX		*/
+	/* POSTCONDITION - CREATES WIMDOW TO CONFIRM IF	*/
+	/* 				   USER WANTS TO RE-RUN PROGRAM	*/
+	/************************************************/
+	{
+		/********************/
+		/* VARIABLE SECTION */
+		/********************/
+		int num;			// INTEGER ANSWER TO RE-RUN PROGRAM
+		
+		/*******************************/
+		/* MAKES CONFIRM DIALOG WINDOW */
+		/*******************************/ 
+		num = JOptionPane.showConfirmDialog(
+				null,
+				"Do you want to re-run program",
+				"Re-run Program",
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.INFORMATION_MESSAGE);
+		
+		/******************/
+		/* RETURN SECTION */
+		/******************/
+		return num;			// RETURNS NUM
+	}
+	
+	public static void updateWindow(String account, double credLine, double flbalance)
+	/************************************************/
+	/* PRECONDITION - NEEDS UPDATE OF BALANCE		*/
+	/* POSTCONDITION - GETS UPDATE FOR BALANCE		*/
+	/************************************************/
+	{
+		/**********************************************/
+		/* IF STATEMENT TO CHECK IF ACCOUNT IS CREDIT */
+		/**********************************************/
+		if (account == "Credit")
+		{
+			/***********************/
+			/* MAKES UPDATE WINDOW */
+			/***********************/
+			JOptionPane.showMessageDialog(
+					null,
+					"Your credit card payment balance is: $" + flbalance + 
+					"\n" + "Your credit limit is $ " + credLine,
+					"Update Window",
+					JOptionPane.INFORMATION_MESSAGE);
+		}
+		
+		/************************************************/
+		/* ELSE STATEMENT TO CHECK IF ACCOUNT IS CREDIT */
+		/************************************************/
+		else
+		{
+			/***********************/
+			/* MAKES UPDATE WINDOW */
+			/***********************/
+			JOptionPane.showMessageDialog(
+					null,
+					"Your current balance is: $" + flbalance,
+					"Update Window",
+					JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+}
