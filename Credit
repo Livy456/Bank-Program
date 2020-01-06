@@ -12,13 +12,20 @@
 /* THEIR CREDIT LINE AND EXTENDS SAVINGS  */
 /******************************************/
 
+/******************/
+/* IMPORT SECTION */
+/******************/
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.text.DecimalFormat;
+
 public class Credit extends Savings
 {
 	/*****************************/
 	/* INSTANCE VARIABLE SECTION */
 	/*****************************/
-	private double interest; 		// INSTANCE VARIABLE FOR INTEREST
-	private double credLine;		// INSTANCE VARIABLE FOR CREDIT LINE
+	protected double credLine;		// INSTANCE VARIABLE FOR CREDIT LINE
 	
 	public Credit()
 	/**************************************************/
@@ -27,59 +34,133 @@ public class Credit extends Savings
 	/**************************************************/
 	{
 		super();			// ACTIVATES THE DEFAULT CONSTRUCTOR IN SAVINGS 
-		credLine = 0.00;	// INTIALIZES CREDLINE TO ZERO
+		credLine = 0;		// INTIALIZES CREDLINE TO ZERO
 	}
 	
-	public Credit(String nm, double bl, double dp, double wd, double it, double crdL)
+	public Credit(String nm, double bl, double dp, double wd, double it, 
+			      int t, int r, double crdL) 
 	/*********************************************************/
 	/* INITIALIZING CONSTRUCTOR - INITIALIZES NAME, BALANCE, */
 	/* DEPOSIT, WITHDRAW, INTEREST, AND CREDLINE 	  		 */
 	/*********************************************************/
 	{
-		super (nm, bl, dp, wd, it);	   // ACTIVATES INTIALIZING CONSTRUCTOR IN SAVINGS
-		credLine = crdL;			   // INTIALIZES CREDLINE TO VALUE INPUTTED BY CLIENT
+		super (nm, bl, dp, wd, it, t, r);	// ACTIVATES INTIALIZING CONSTRUCTOR 
+											// IN SAVINGS
+		credLine = crdL;			  		// INTIALIZES CREDLINE TO VALUE 
+											// INPUTTED BY CLIENT
 	}
 	
-	public Credit (Credit c)
+	public Credit(Credit c)
 	/**********************************************************/
 	/* COPY CONSTRUCTOR - USES AN OBJECT TO INITIALIZES NAME, */
 	/* BALANCE, DEPOSIT, WITHDRAW, INTEREST, AND CREDLINE 	  */
 	/**********************************************************/
 	{
-		super (c.name, c.balance, c.deposit, c.withdraw, c.interest);// ACTIVATES COPY 
-																	 // CONSTRUCTOR IN 
-																	 // SAVINGS
-		credLine = c.credLine;										 // INTIALIZES 
-																	 // CREDLINE TO 
-																	 // COPY OF OBJECT 
-																	 // CREDLINE VALUE
+		super (c.name, c.balance, c.deposit, c.withdraw, c.interest, 
+			   c.time, c.rate);	// ACTIVATES COPY CONSTRUCTOR IN SAVINGS
+		credLine = c.credLine;	// INTIALIZES CREDLINE TO COPY OF OBJECT 
+								// CREDLINE VALUE
 	}
 	
-	public void setBalance (double bl)
-	/**************************************************/
-	/* PRECONDITION - PROGRAM HAS A BALANCE			  */
-	/* POSTCONDITION - FUNCTION SETS VALUE OF BALANCE */
-	/**************************************************/
-	{
-		balance = bl;		// SETS BALANCE TO BALANCE VALUE INPUTTED FROM CLIENT
+	public void setCred(double crdL)
+	/***************************************************/
+	/* PRECONDITION - PROGRAM HAS A CREDLINE		   */
+	/* POSTCONDITION - FUNCTION SETS VALUE OF CREDLINE */
+	/***************************************************/
+	{	
+		credLine = crdL;	// SETS BALANCE TO CREDLINE VALUE INPUTTED FROM CLIENT
 	}
 	
-	public double getBalance()
+	public double getCred()
+	/*********************************************/
+	/* PRECONDITION - PROGRAM HAS A CREDLINE	 */
+	/* POSTCONDITION - FUNCTION RETURNS CREDLINE */
+	/*********************************************/
+	{
+		/******************/
+		/* RETURN SECTION */
+		/******************/
+		return credLine;	// RETURNS CREDLINE
+	}
+	
+	public double getAddDp()
 	/****************************************************/
-	/* PRECONDITION - PROGRAM HAS A BALANCE			  	*/
-	/* POSTCONDITION - FUNCTION RETURNS BALANCE			*/
+	/* PRECONDITION - PROGRAM HAS A BALANCE AND DEPOSIT */
+	/* POSTCONDITION - FUNCTION RETURNS BALANCE   	  	*/
 	/****************************************************/
 	{
+		balance -= deposit;		// PAYS OFF THE CREDIT DUE TO THE BANK
+		
 		/******************/
 		/* RETURN SECTION */
 		/******************/
 		return balance;		// RETURNS BALANCE
 	}
 	
-	public void setCred()
-	
-	{	
-		
+	public double getSubWd()
+	/****************************************************/
+	/* PRECONDITION - PROGRAM HAS A BALANCE AND WITHDRW */
+	/* POSTCONDITION - FUNCTION RETURNS BALANCE   	  	*/
+	/****************************************************/
+	{
+		balance += withdraw; 		// ADDING ON AMOUNT DUE TO THE BANK
+									// OR THE DEBT OWED TO BANK 
+		/******************/
+		/* RETURN SECTION */
+		/******************/
+		return balance;		// RETURNS BALANCE
 	}
 	
+	public double getSubBal()
+	/**************************************************/
+	/* PRECONDITION - PROGRAM HAS A BALANCE, DEPOSIT, */
+	/* 				  INTEREST, TIME, AND RATE 		  */
+	/* POSTCONDITION - FUNCTION RETURNS BALANCE   	  */
+	/**************************************************/
+	{
+		/********************/
+		/* VARIABLE SECTION */
+		/********************/
+		double power; 		// USED FOR ASSIGNING VALUE OF INTEREST TIMES TIME
+		double value;		// USED FOR ASSINGING VALUE OF INTEREST DIVIDED BY RATE	
+		double it;			// USED FOR ASSIGNING VALUE OF DECIMAL FORM OF INTEREST
+		double nt;			// USED FOR ASSIGNINGB VALUE OF INTEREST DIVIDED BY RATE
+		
+		/*****************************************************/
+		/* CALCULATION SECTION FOR COMPOUND INTEREST OF DEBT */
+		/*****************************************************/
+		it = interest / 100;							// MAKES INTEREST INTO A DECIMAL
+		power = rate * time;							// ASSIGNS POWER TO POWER PART OF COMPOUND INTEREST EQUATION 
+		nt = (double)it / rate;							// FINDS THE VALUE OF N/T IN THE COMPOUND INTEREST EQUATION
+		value = 1 + nt;									// ASSIGNS VALUE TO MIDDLE PART OF COMPOUND INTEREST EQUATION
+		balance = balance * (Math.pow(value, power));	// ASSIGNS BALANCE TO VALUE OF COMPOUND INTEREST EQUATION
+		
+		/******************/
+		/* RETURN SECTION */
+		/******************/
+		return balance;		// RETURNS BALANCE	
+	}
+	
+	public String toString()
+	/******************************************************/
+	/* OVERRIDES THE TOSTRING IN THE PARENT CLASS SAVINGS */
+	/* AND CREATES A STRING REPRESENTATION OF THIS OBJECT */
+	/******************************************************/
+	{
+		/********************/
+		/* VARIABLE SECTION */
+		/********************/
+		String str; 	// STRING REPRESENTATION OF OBJECT
+		
+		/*****************************************/
+		/* MAKES STRING REPRESENTATION OF OBJECT */
+		/*****************************************/
+		str = super.toString() +
+			 "Your credit limit is $" + credLine;
+		
+		/******************/
+		/* RETURN SECTION */
+		/******************/ 
+		return str;			// RETURNS STRING REPRESENTATION OF OBJECT
+	}
 }
