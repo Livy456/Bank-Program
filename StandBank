@@ -1,17 +1,25 @@
-/**********************************/
-/* USER DESCRIPTION SECTION 			*/
-/* OLIVIA 				   			    */
-/* CHAPTER 11 PROJECT 11-5			  */
-/* PROGRAM 10							        */
+/******************************************/
+/* USER DESCRIPTION SECTION 			  */
+/* OLIVIA 				   			  */
+/* CHAPTER 11 PROJECT 11-5			   	  */
+/* PROGRAM 10							  */
 /* DECEMBER 6, 2019		   				  */
-/**********************************/
+/******************************************/
 /******************************************/
 /* THIS IS A PROGRAM TO MAKE AN OBJECT	  */
 /* HAVE INSTANCE VARIABLES, CONSTRUCTORS, */
 /* AND METHODS SO THE CLIENT CAN INPUT	  */
-/* THEIR NAME, BALANCE, AND HOW MUCH 	    */
-/* THEY WANT TO DEPOSIT OR WITHDRAW 	    */			
+/* THEIR NAME, BALANCE, AND HOW MUCH 	  */
+/* THEY WANT TO DEPOSIT OR WITHDRAW 	  */			
 /******************************************/
+
+/******************/
+/* IMPORT SECTION */
+/******************/
+import javax.swing.*;			// IMPORTS SWING
+import java.awt.*;				// IMPORTS AWT
+import java.awt.event.*;		// IMPORTS A LISTENER EVENT
+import java.text.DecimalFormat;	// IMPORTS DECIMAL FORMAT
 
 abstract public class StandBank 
 {
@@ -30,9 +38,9 @@ abstract public class StandBank
 	/**************************************************/
 	{
 		name = "";			// INTIALIZES NAME TO AN EMPTY STRING
-		balance = 0.00;		// INTIALIZES BALANCE TO ZERO
-		deposit = 0.00;		// INTIALIZES DEPOSIT TO ZERO
-		withdraw = 0.00;	// INTIALIZES WITHDRAW TO ZERO
+		balance = 0;		// INTIALIZES BALANCE TO ZERO
+		deposit = 0;		// INTIALIZES DEPOSIT TO ZERO
+		withdraw = 0;		// INTIALIZES WITHDRAW TO ZERO
 	}
 	
 	public StandBank(String nm, double bl, double dp, double wd)
@@ -143,9 +151,11 @@ abstract public class StandBank
 		return withdraw;	// RETURNS WITHDRAW
 	}
 	
-	abstract public double getAddBal();	// ABSTRACT CLASS FOR ADDING BALANCE THAT MUST BE DEFINED BY THE SUBCLASSES 
+	abstract public double getAddBal();	// ABSTRACT METHOD FOR ADDING BALANCE THAT MUST
+										// BE DEFINED BY THE SUBCLASSES 
 	
-	abstract public double getSubWd();	// ABSTRACT CLASS FOR SUBTRACTING WITHDRAW THAT MUST BE DEFINED BY THE SUBCLASSES 
+	abstract public double getSubWd();	// ABSTRACT METHOD FOR SUBTRACTING WITHDRAW 
+										// THAT MUST BE DEFINED BY THE SUBCLASSES 
 
 	public String toString()
 	/******************************************************/
@@ -162,7 +172,7 @@ abstract public class StandBank
 		/* MAKES STRING REPRESENTATION OF OBJECT */
 		/*****************************************/
 		str = "Your name is " + name + "\n" +
-			  "and your balance is $"+ balance + "0.\n" +
+			  "and your final balance is $"+ balance + "0.\n" +
 			  "You have deposited $" + deposit + "0.\n" + 
 			  "You have withdrawn $" + withdraw + "0.";				
 		
@@ -172,4 +182,3 @@ abstract public class StandBank
 		return str;				// RETURNS STRING REPRESENTATION OF OBJECT
 	}
 }
-
