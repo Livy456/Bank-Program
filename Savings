@@ -13,6 +13,14 @@
 /* STANDBANK				  	  		  */
 /******************************************/
 
+/******************/
+/* IMPORT SECTION */
+/******************/
+import javax.swing.*;			// IMPORTS SWING
+import java.awt.*;				// IMPORTS AWT
+import java.awt.event.*;		// IMPORTS A LISTENER EVENT
+import java.text.DecimalFormat;	// IMPORTS DECIMAL FORMAT
+
 public class Savings extends StandBank 
 {
 	/*****************************/
@@ -23,7 +31,7 @@ public class Savings extends StandBank
 	protected int rate;			// INSTANCE VARIABLE FOR PERIODIC RATE THAT
 								// CLIENT COMPOUNDED
 	
-	public Savings ()
+	public Savings()
 	/**************************************************/
 	/* DEFAULT CONSTRUCTOR - IT SETS ALL THE INSTANCE */
 	/* VARIABLE VALUES TO AN EMPTY STRING AND ZERO 	  */
@@ -35,8 +43,8 @@ public class Savings extends StandBank
 		rate = 0;			// INTIALIZES RATE TO ZERO
 	}
 	
-	public Savings (String nm, double bl, double dp, double wd, 
-					double it, int t, int r)
+	public Savings(String nm, double bl, double dp, double wd, 
+				   double it, int t, int r)
 	/*********************************************************/
 	/* INITIALIZING CONSTRUCTOR - INITIALIZES NAME, BALANCE, */
 	/* DEPOSIT, WITHDRAW, INTEREST, TIME, AND RATE 			 */
@@ -48,7 +56,7 @@ public class Savings extends StandBank
 		rate = r;					// INTIALIZES RATE TO VALUE INPUTTED BY CLIENT
 	}
 	
-	public Savings (Savings s)
+	public Savings(Savings s)
 	/**********************************************************/
 	/* COPY CONSTRUCTOR - USES AN OBJECT TO INITIALIZES NAME, */
 	/* BALANCE, DEPOSIT, WITHDRAW, INTEREST, TIME, AND RATE   */
@@ -61,7 +69,7 @@ public class Savings extends StandBank
 		rate = s.rate;			// INTIALIZES RATE COPY OF OBJECT RATE VALUE
 	}
 	
-	public final void setInterest (double it)
+	public final void setInterest(double it)
 	/***************************************************/
 	/* PRECONDITION - PROGRAM HAS A INTEREST		   */
 	/* POSTCONDITION - FUNCTION SETS VALUE OF INTEREST */
@@ -70,7 +78,7 @@ public class Savings extends StandBank
 		interest = it;		// SETS INTEREST TO INTEREST VALUE INPUTTED FROM CLIENT
 	}
 	
-	public final double getInterest ()
+	public final double getInterest()
 	/****************************************************/
 	/* PRECONDITION - PROGRAM HAS A INTEREST			*/
 	/* POSTCONDITION - FUNCTION RETURNS INTEREST		*/
@@ -82,7 +90,7 @@ public class Savings extends StandBank
 		return interest;	// RETURNS INTEREST
 	}
 	
-	public void setTime (int t)
+	public void setTime(int t)
 	/***********************************************/
 	/* PRECONDITION - PROGRAM HAS A TIME		   */
 	/* POSTCONDITION - FUNCTION SETS VALUE OF TIME */
@@ -91,7 +99,7 @@ public class Savings extends StandBank
 		time = t;			// SETS TIME TO TIME VALUE INPUTTED FROM CLIENT
 	}
 	
-	public int getTime ()
+	public int getTime()
 	/*****************************************/
 	/* PRECONDITION - PROGRAM HAS A TIME	 */
 	/* POSTCONDITION - FUNCTION RETURNS TIME */
@@ -103,7 +111,7 @@ public class Savings extends StandBank
 		return time;		// RETURNS TIME
 	}
 	
-	public void setRate (int r)
+	public void setRate(int r)
 	/***********************************************/
 	/* PRECONDITION - PROGRAM HAS A RATE		   */
 	/* POSTCONDITION - FUNCTION SETS VALUE OF RATE */
@@ -112,7 +120,7 @@ public class Savings extends StandBank
 		rate = r;			// SETS RATE TO RATE VALUE INPUTTED FROM CLIENT
 	}
 	
-	public int getRate ()
+	public int getRate()
 	/*****************************************/
 	/* PRECONDITION - PROGRAM HAS A RATE	 */
 	/* POSTCONDITION - FUNCTION RETURNS RATE */
@@ -124,27 +132,86 @@ public class Savings extends StandBank
 		return rate;		// RETURNS RATE
 	}
 	
-	public double getAddBal ()
+	public double getAddDep()
+	/****************************************************/
+	/* PRECONDITION - PROGRAM HAS A BALANCE AND DEPOSIT */
+	/* POSTCONDITION - FUNCTION RETURNS BALANCE   	    */
+	/****************************************************/
+	{
+		balance += deposit;		// ADDS DEPOSIT TO BALANCE 
+		
+		/******************/
+		/* RETURN SECTION */
+		/******************/
+		return balance;		// RETURNS RATE
+	}
+	
+	public double getAddBal()
 	/**************************************************/
 	/* PRECONDITION - PROGRAM HAS A BALANCE, DEPOSIT, */
 	/* 				  INTEREST, TIME, AND RATE 		  */
 	/* POSTCONDITION - FUNCTION RETURNS BALANCE   	  */
 	/**************************************************/
 	{
-		// COMMENT THIS SECTION NEXT
-		double power; 
-		double value;
+		/********************/
+		/* VARIABLE SECTION */
+		/********************/
+		double power; 		// USED FOR ASSIGNING VALUE OF INTEREST TIMES TIME
+		double value;		// USED FOR ASSINGING VALUE OF INTEREST DIVIDED BY RATE	
+		double it;			// USED FOR ASSIGNING VALUE OF DECIMAL FORM OF INTEREST
+		double nt;			// USED FOR ASSIGNINGB VALUE OF INTEREST DIVIDED BY RATE
 		
-		balance += deposit;
+		/*********************************************/
+		/* CALCULATION SECTION FOR COMPOUND INTEREST */
+		/*********************************************/
+		it = interest / 100;							// MAKES INTEREST INTO A DECIMAL
+		power = rate * time;							// ASSIGNS POWER TO POWER PART OF COMPOUND INTEREST EQUATION 
+		nt = (double)it / rate;							// FINDS THE VALUE OF N/T IN THE COMPOUND INTEREST EQUATION
+		value = 1 + nt;									// ASSIGNS VALUE TO MIDDLE PART OF COMPOUND INTEREST EQUATION
+		balance = balance * (Math.pow(value, power));	// ASSIGNS BALANCE TO VALUE OF COMPOUND INTEREST EQUATION
 		
-		interest = interest / 100;
+		/******************/
+		/* RETURN SECTION */
+		/******************/
+		return balance;		// RETURNS BALANCE
+	}
+	
+	public double getSubWd()
+	/*****************************************************/
+	/* PRECONDITION - PROGRAM HAS A BALANCE AND WITHDRAW */
+	/* POSTCONDITION - FUNCTION RETURNS BALANCE   	  	 */
+	/*****************************************************/
+	{
+		balance -= withdraw;	// SUBTRACTS WITHDRAW FROM BALANCE
 		
-		power = interest * time;
+		/******************/
+		/* RETURN SECTION */
+		/******************/
+		return balance;			// RETURNS BALANCE
+	}
+	
+	public String toString ()
+	/********************************************************/
+	/* OVERRIDES THE TOSTRING IN THE PARENT CLASS STANDBANK */
+	/* AND CREATES A STRING REPRESENTATION OF THIS OBJECT   */
+	/********************************************************/
+	{
+		/********************/
+		/* VARIABLE SECTION */
+		/********************/
+		String str; 	// STRING REPRESENTATION OF OBJECT
 		
-		value = 1 + (interest / rate);
+		/*****************************************/
+		/* MAKES STRING REPRESENTATION OF OBJECT */
+		/*****************************************/
+		str = super.toString() +
+			  "\nYour interest rate is " + interest + "%.\n" +
+			  "You have accrued interest for " + time + " years at a rate " +
+			  "of " + rate + " times a year.\n";
 		
-		balance = balance * (Math.pow(value, power));
-		
-		return balance;
+		/******************/
+		/* RETURN SECTION */
+		/******************/ 
+		return str;			// RETURNS STRING REPRESENTATION OF OBJECT
 	}
 }
