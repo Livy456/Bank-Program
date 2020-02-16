@@ -37,7 +37,7 @@ public class Credit extends Savings
 		credLine = 0;		// INTIALIZES CREDLINE TO ZERO
 	}
 	
-	public Credit(String nm, double bl, double dp, double wd, double it, 
+	public Credit(String nm, double bl, double dp, double wd, int it, 
 			      int t, int r, double crdL) 
 	/*********************************************************/
 	/* INITIALIZING CONSTRUCTOR - INITIALIZES NAME, BALANCE, */
@@ -83,7 +83,7 @@ public class Credit extends Savings
 		return credLine;	// RETURNS CREDLINE
 	}
 	
-	public double getAddDp()
+	public double getAddDep()
 	/****************************************************/
 	/* PRECONDITION - PROGRAM HAS A BALANCE AND DEPOSIT */
 	/* POSTCONDITION - FUNCTION RETURNS BALANCE   	  	*/
@@ -129,7 +129,7 @@ public class Credit extends Savings
 		/*****************************************************/
 		/* CALCULATION SECTION FOR COMPOUND INTEREST OF DEBT */
 		/*****************************************************/
-		it = interest / 100;							// MAKES INTEREST INTO A DECIMAL
+		it = (double)interest / 100;							// MAKES INTEREST INTO A DECIMAL
 		power = rate * time;							// ASSIGNS POWER TO POWER PART OF COMPOUND INTEREST EQUATION 
 		nt = (double)it / rate;							// FINDS THE VALUE OF N/T IN THE COMPOUND INTEREST EQUATION
 		value = 1 + nt;									// ASSIGNS VALUE TO MIDDLE PART OF COMPOUND INTEREST EQUATION
@@ -156,7 +156,7 @@ public class Credit extends Savings
 		/* MAKES STRING REPRESENTATION OF OBJECT */
 		/*****************************************/
 		str = super.toString() +
-			 "Your credit limit is $" + credLine;
+			 "\nYour credit limit is $" + credLine;
 		
 		/******************/
 		/* RETURN SECTION */
