@@ -26,8 +26,8 @@ public class Savings extends StandBank
 	/*****************************/
 	/* INSTANCE VARIABLE SECTION */
 	/*****************************/
-	protected double interest;	// INSTANCE VARIABLE FOR INTEREST RATE
-	protected int time;			// INSTANCE VARIABLE FOR YEARS THAT CLIENT COMPOUNDED 
+	protected int interest;		// INSTANCE VARIABLE FOR INTEREST RATE
+	protected int time;			// INSTANCE VARIABLE FOR YEARS CLIENT COMPOUNDED 
 	protected int rate;			// INSTANCE VARIABLE FOR PERIODIC RATE THAT
 								// CLIENT COMPOUNDED
 	
@@ -38,22 +38,22 @@ public class Savings extends StandBank
 	/**************************************************/
 	{
 		super ();			// ACTIVATES THE DEFAULT CONSTRUCTOR IN STANDBANK 
-		interest = 0.00;	// INTIALIZES INTEREST TO ZERO
+		interest = 0;		// INTIALIZES INTEREST TO ZERO
 		time = 0;			// INTIALIZES TIME TO ZERO
 		rate = 0;			// INTIALIZES RATE TO ZERO
 	}
 	
 	public Savings(String nm, double bl, double dp, double wd, 
-				   double it, int t, int r)
+				   int it, int t, int r)
 	/*********************************************************/
 	/* INITIALIZING CONSTRUCTOR - INITIALIZES NAME, BALANCE, */
 	/* DEPOSIT, WITHDRAW, INTEREST, TIME, AND RATE 			 */
 	/*********************************************************/
 	{
-		super (nm, bl, dp, wd);		// ACTIVATES INTIALIZING CONSTRUCTOR IN STANDBANK
-		interest = it;				// INTIALIZES INTEREST TO VALUE INPUTTED BY CLIENT
-		time = t;					// INTIALIZES TIME TO VALUE INPUTTED BY CLIENT
-		rate = r;					// INTIALIZES RATE TO VALUE INPUTTED BY CLIENT
+		super (nm, bl, dp, wd);	// ACTIVATES INTIALIZING CONSTRUCTOR IN STANDBANK
+		interest = it;			// INTIALIZES INTEREST TO VALUE INPUT FROM CLIENT
+		time = t;				// INTIALIZES TIME TO VALUE INPUT FROM CLIENT
+		rate = r;				// INTIALIZES RATE TO VALUE INPUT FROM CLIENT
 	}
 	
 	public Savings(Savings s)
@@ -62,20 +62,20 @@ public class Savings extends StandBank
 	/* BALANCE, DEPOSIT, WITHDRAW, INTEREST, TIME, AND RATE   */
 	/**********************************************************/
 	{
-		super (s.name, s.balance, s.deposit, s.withdraw); // ACTIVATES COPY CONSTRUCTOR 
-														  // IN STANDBANK
-		interest = s.interest; 	// INTIALIZES INTEREST COPY OF OBJECT INTEREST VALUE
-		time = s.time;			// INTIALIZES TIME COPY OF OBJECT TIME VALUE
-		rate = s.rate;			// INTIALIZES RATE COPY OF OBJECT RATE VALUE
+		super (s.name, s.balance, 
+			   s.deposit, s.withdraw); // ACTIVATES COPY CONSTRUCTOR IN STANDBANK
+		interest = s.interest; 	// INTIALIZES INTEREST COPY OF OBJECT INTEREST
+		time = s.time;			// INTIALIZES TIME COPY OF OBJECT TIME 
+		rate = s.rate;			// INTIALIZES RATE COPY OF OBJECT RATE
 	}
 	
-	public final void setInterest(double it)
+	public final void setInterest(int it)
 	/***************************************************/
 	/* PRECONDITION - PROGRAM HAS A INTEREST		   */
 	/* POSTCONDITION - FUNCTION SETS VALUE OF INTEREST */
 	/***************************************************/
 	{
-		interest = it;		// SETS INTEREST TO INTEREST VALUE INPUTTED FROM CLIENT
+		interest = it;	// SETS INTEREST TO INTEREST VALUE INPUTTED FROM CLIENT
 	}
 	
 	public final double getInterest()
@@ -96,7 +96,7 @@ public class Savings extends StandBank
 	/* POSTCONDITION - FUNCTION SETS VALUE OF TIME */
 	/***********************************************/
 	{
-		time = t;			// SETS TIME TO TIME VALUE INPUTTED FROM CLIENT
+		time = t;		// SETS TIME TO TIME VALUE INPUTTED FROM CLIENT
 	}
 	
 	public int getTime()
@@ -117,7 +117,7 @@ public class Savings extends StandBank
 	/* POSTCONDITION - FUNCTION SETS VALUE OF RATE */
 	/***********************************************/
 	{
-		rate = r;			// SETS RATE TO RATE VALUE INPUTTED FROM CLIENT
+		rate = r;		// SETS RATE TO RATE VALUE INPUTTED FROM CLIENT
 	}
 	
 	public int getRate()
@@ -143,7 +143,7 @@ public class Savings extends StandBank
 		/******************/
 		/* RETURN SECTION */
 		/******************/
-		return balance;		// RETURNS RATE
+		return balance;			// RETURNS RATE
 	}
 	
 	public double getAddBal()
@@ -156,19 +156,19 @@ public class Savings extends StandBank
 		/********************/
 		/* VARIABLE SECTION */
 		/********************/
-		double power; 		// USED FOR ASSIGNING VALUE OF INTEREST TIMES TIME
-		double value;		// USED FOR ASSINGING VALUE OF INTEREST DIVIDED BY RATE	
-		double it;			// USED FOR ASSIGNING VALUE OF DECIMAL FORM OF INTEREST
-		double nt;			// USED FOR ASSIGNINGB VALUE OF INTEREST DIVIDED BY RATE
+		double power; 		// USED FOR VALUE OF INTEREST TIMES TIME
+		double value;		// USED FOR VALUE OF INTEREST DIVIDED BY RATE	
+		double it;			// USED FOR VALUE OF DECIMAL FORM OF INTEREST
+		double nt;			// USED FOR VALUE OF INTEREST DIVIDED BY RATE
 		
 		/*********************************************/
 		/* CALCULATION SECTION FOR COMPOUND INTEREST */
 		/*********************************************/
-		it = interest / 100;							// MAKES INTEREST INTO A DECIMAL
-		power = rate * time;							// ASSIGNS POWER TO POWER PART OF COMPOUND INTEREST EQUATION 
-		nt = (double)it / rate;							// FINDS THE VALUE OF N/T IN THE COMPOUND INTEREST EQUATION
-		value = 1 + nt;									// ASSIGNS VALUE TO MIDDLE PART OF COMPOUND INTEREST EQUATION
-		balance = balance * (Math.pow(value, power));	// ASSIGNS BALANCE TO VALUE OF COMPOUND INTEREST EQUATION
+		it = (double)interest / 100;// INTEREST AS A DECIMAL
+		power = rate * time;		// EXPONENT IN COMPOUND INTEREST EQUATION 
+		nt = (double)it / rate;		// N/T IN COMPOUND INTEREST EQUATION
+		value = 1 + nt;				// MIDDLE PART OF COMPOUND INTEREST EQUATION
+		balance = balance * (Math.pow(value, power));	// FINAL BALANCE 
 		
 		/******************/
 		/* RETURN SECTION */
@@ -207,7 +207,7 @@ public class Savings extends StandBank
 		str = super.toString() +
 			  "\nYour interest rate is " + interest + "%.\n" +
 			  "You have accrued interest for " + time + " years at a rate " +
-			  "of " + rate + " times a year.\n";
+			  "of " + rate + " times a year.";
 		
 		/******************/
 		/* RETURN SECTION */
