@@ -38,9 +38,9 @@ abstract public class StandBank
 	/**************************************************/
 	{
 		name = "";			// INTIALIZES NAME TO AN EMPTY STRING
-		balance = 0;		// INTIALIZES BALANCE TO ZERO
-		deposit = 0;		// INTIALIZES DEPOSIT TO ZERO
-		withdraw = 0;		// INTIALIZES WITHDRAW TO ZERO
+		balance = 0.00;		// INTIALIZES BALANCE TO ZERO
+		deposit = 0.00;		// INTIALIZES DEPOSIT TO ZERO
+		withdraw = 0.00;		// INTIALIZES WITHDRAW TO ZERO
 	}
 	
 	public StandBank(String nm, double bl, double dp, double wd)
@@ -62,9 +62,9 @@ abstract public class StandBank
 	/****************************************************/
 	{
 		name = b.name;			// INTIALIZES NAME TO COPY OF OBJECT NAME VALUE
-		balance = b.balance;	// INTIALIZES BALANCE TO COPY OF OBJECT NAME VALUE
-		deposit = b.deposit;	// INTIALIZES DEPOSIT TO COPY OF OBJECT NAME VALUE
-		withdraw = b.withdraw;	// INTIALIZES WITHDRAW TO COPY OF OBJECT NAME VALUE
+		balance = b.balance;	// INTIALIZES BALANCE TO COPY OF OBJECT NAME 
+		deposit = b.deposit;	// INTIALIZES DEPOSIT TO COPY OF OBJECT NAME 
+		withdraw = b.withdraw;	// INTIALIZES WITHDRAW TO COPY OF OBJECT NAME 
 	}
 	
 	public void setName(String nm)
@@ -151,11 +151,11 @@ abstract public class StandBank
 		return withdraw;	// RETURNS WITHDRAW
 	}
 	
-	abstract public double getAddBal();	// ABSTRACT METHOD FOR ADDING BALANCE THAT MUST
-										// BE DEFINED BY THE SUBCLASSES 
+	abstract public double getAddBal();	// ABSTRACT METHOD FOR ADDING BALANCE 
+										// MUST BE DEFINED BY SUBCLASSES 
 	
-	abstract public double getSubWd();	// ABSTRACT METHOD FOR SUBTRACTING WITHDRAW 
-										// THAT MUST BE DEFINED BY THE SUBCLASSES 
+	abstract public double getSubWd();	// ABSTRACT METHOD FOR SUBTRACTING  
+										// WITHDRAW MUST BE DEFINED BY SUBCLASSES 
 
 	public String toString()
 	/******************************************************/
@@ -166,15 +166,19 @@ abstract public class StandBank
 		/********************/
 		/* VARIABLE SECTION */
 		/********************/
-		String str;				// STRING REPRESENTATION OF OBJECT
+		String str;										// STRING REPRESENTATION OF OBJECT
+		DecimalFormat df = new DecimalFormat("#.##");	// INSTANTIATES THE DF TO FORMAT DECIMALS
+		String dfbalance = df.format(balance);			// CONVERTS BALANCE TO A STRING TO FORMAT DECIMALS
+		String dfdeposit = df.format(deposit);			// CONVERTS DEPOSIT TO A STRING TO FORMAT DECIMALS
+		String dfwithdraw = df.format(withdraw);		// CONVERTS WITHDRAW TO A STRING TO FORMAT DECIMALS
 		
 		/*****************************************/
 		/* MAKES STRING REPRESENTATION OF OBJECT */
 		/*****************************************/
 		str = "Your name is " + name + "\n" +
-			  "and your final balance is $"+ balance + "0.\n" +
-			  "You have deposited $" + deposit + "0.\n" + 
-			  "You have withdrawn $" + withdraw + "0.";				
+			  "and your final balance is $"+ dfbalance + ".\n" +
+			  "You have deposited $" + dfdeposit + ".\n" + 
+			  "You have withdrawn $" + dfwithdraw + ".";				
 		
 		/******************/
 		/* RETURN SECTION */
