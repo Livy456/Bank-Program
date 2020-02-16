@@ -1,10 +1,17 @@
-/*****************************************/
-/* THIS IS A PROGRAM TO HAVE USER INPUT	 */
-/* THEIR NAME, BALANCE, AND HOW MUCH 	 */
-/* THEY WANT TO DEPOSIT OR WITHDRAW, AND */
-/* USE EITHER A CHECKING, SAVING, OR  	 */
-/* CREDIT ACCOUNTS						 */
-/*****************************************/
+/******************************************/
+/* USER DESCRIPTION SECTION 			  */
+/* OLIVIA 				   			  */
+/* CHAPTER 11 PROJECT 11-5			   	  */
+/* PROGRAM 10							  */
+/* DECEMBER 6, 2019		   			  	  */
+/******************************************/
+/******************************************/
+/* THIS IS A PROGRAM TO HAVE USER INPUT	  */
+/* THEIR NAME, BALANCE, AND HOW MUCH 	  */
+/* THEY WANT TO DEPOSIT OR WITHDRAW, AND  */
+/* USE EITHER A CHECKING, SAVING, OR  	  */
+/* CREDIT ACCOUNTS						  */
+/******************************************/
 
 /******************/
 /* IMPORT SECTION */
@@ -21,9 +28,9 @@ public class MainBank
 	final static String message2 = "Input deposit: $";
 	final static String message3 = "Input withdraw: $";
 	final static String message4 = "Input interest rate: " + "%"; 
-	final static String message5 = "Input how long you want to compound your money(years): ";
-	final static String message6 = "Input the amount of money you want to withdraw to spend: $";
-	final static String message7 = "Input the amount of money you want to deposit back to the bank: $";
+	final static String message5 = "Input how number of years you want to compound money(years): ";
+	final static String message6 = "Input the amount of money you want to withdraw (spend): $";
+	final static String message7 = "Input the amount of money you want to deposit to pay back the bank: $";
 	final static String message8 = "Input your credit limit: $";
 	final static String heading1 = "Input Balance";
 	final static String heading2 = "Input Deposit";
@@ -34,7 +41,8 @@ public class MainBank
 	final static String error1 = "ERROR!!! Money must be positive!!!";
 	final static String error2 = "ERROR!!! Money must be positive and less than balance!!";
 	final static String error3 = "ERROR!!! Number must be postive and less than 100!!";
-	final static String error4 = "You have MAXED your credit limit";
+	final static String error4 = "You have MAXED your credit limit!!";
+	final static String error5 = "You have exceeded the number of iterations for the credit card!!";
 	
 	public static void main (String[]args)
 	{
@@ -44,14 +52,17 @@ public class MainBank
 		Check check;				// OBJECT CHECK THAT REFERENCES CHECK
 		Credit credit;				// OBJECT CREDIT THAT REFERENCES CREDIT 
 		Savings save;				// OBJECT SAVE THAT REFERENCES SAVINGS 
-		DecimalFormat df;			// OBJECT DF THAT REFERENCES DECIMALFORMAT
+		DecimalFormat df;			// OBJECT DF THAT REFERENCE DECIMALFORMAT
 		String name;				// NAME OF USER
-		String account;				// TYPE OF BANK ACCOUNT SELECTE BY USER
+		String account;				// TYPE OF BANK ACCOUNT SELECTED BY USER
+		String dfdeposit;			// STRING FORM OF DEPOSIT
+		String dfbalance;			// STRING FORM OF FINAL BALANCE
+		String dfwithdraw;			// STRING FORM OF WITHDRAW
 		double deposit;				// AMOUNT OF MONEY ADDED TO BANK ACCOUNT
 		double stbalance;			// AMOUNT OF MONEY USER STARTS WITH
 		double flbalance;			// AMOUNT OF MONEY USER ENDS WITH	
 		double withdraw;			// AMOUNT OF MONEY TAKEN OUT OF BANK ACCOUNT
-		double credLine;			// MAX NUMBER OF WITHDRAWLS MADE IN CREDIT ACCOUNT
+		double credLine;			// LIMIT FOR MONEY WITHDRAWN FROM CREDIT
 		int interest;				// INTEREST FOR CREDIT AND SAVINGS
 		int time;					// NUMBER OF YEARS BALANCE IS COMPOUNDED
 		int rate;					// FREQUENCY IN WHICH MONEY IS COMPOUNDED
@@ -71,10 +82,10 @@ public class MainBank
 			/*************************/
 			/* INSTANTIATION SECTION */
 			/*************************/
-			check = new Check();					// INSTANTIATES CHECK, USES DEFAULT CONSTRUCTOR
-			credit = new Credit();					// INSTANTIATES CREDIT, USES DEFAULT CONSTRUCTOR
-			save = new Savings();					// INSTANTIATES SAVE, USES DEFAULT CONSTRUCTOR
-			df = new DecimalFormat("#0.00");		// INSTANTIATES DF, ASSIGNS DECIMAL PRECISION OF TWO
+			check = new Check();				// INSTANTIATES CHECK, USES DEFAULT CONSTRUCTOR
+			credit = new Credit();				// INSTANTIATES CREDIT, USES DEFAULT CONSTRUCTOR
+			save = new Savings();				// INSTANTIATES SAVE, USES DEFAULT CONSTRUCTOR
+			df = new DecimalFormat("#.##");		// INSTANTIATES DF
 			
 			/*****************/
 			/* INPUT SECTION */
@@ -98,20 +109,17 @@ public class MainBank
 			/* IF STATEMENT TO INPUT CREDIT INFORMATION */
 			/********************************************/
 			if (account == "Credit") 
-			{
+			{				
 				/******************/
 				/* INPUTS BALANCE */
 				/******************/
 				credLine = inputDouble1(message8, heading8);	// CALL TO INPUT DOUBLE
-				df.format(credLine);			// FORMATS CREDIT LINE TO PRECISION OF TWO DECIMAL PLACES
-				
-				credit.setCred(credLine);		// CALL TO SET CREDIT LINE METHOD IN CREDIT
-				
-				flbalance = 0;					// ASSIGNS FINAL BALANCE TO STARTING AMOUNT SPENT IN CREDIT ACCOUNT  
-				df.format(flbalance);			// FORMATS FLBALANCE TO PRECISION OF TWO DECIMAL PLACES
-								
-				updateWindow(account, credLine, flbalance);		// CALL TO UPDATE WINDOW METHOD
-				
+				df.format(credLine);		// FORMATS CREDIT LINE TO PRECISION OF TWO DECIMAL PLACES
+				credit.setCred(credLine);			// CALL TO SET CREDIT LINE METHOD IN CREDIT
+				flbalance = 0;						// ASSIGNS FINAL BALANCE TO STARTING AMOUNT SPENT IN CREDIT ACCOUNT  
+				dfbalance = df.format(flbalance);	// FORMATS FLBALANCE TO PRECISION OF TWO DECIMAL PLACES
+
+				updateWindowCredit(account, dfbalance, credLine);	// CALL TO UPDATE WINDOW METHOD				
 				/*****************************************/
 				/* LOOP TO RE-INPUT WITHDRAW AND DEPOSIT */
 				/*****************************************/
@@ -121,39 +129,43 @@ public class MainBank
 					/* INPUTS WITHDRAW */
 					/*******************/
 					withdraw = inputDouble1(message6, heading3);	// CALL TO INPUT DOUBLE
-					df.format(withdraw);			// FORMATS WITHDRAW TO PRECISION OF TWO DECIMAL PLACES		
-				
-					credit.setDeposit(withdraw);	// CALL TO SET DEPOSIT WITHDRAW IN CREDIT
-					save.getAddDep();				// CALL TO GET SUBTRACTING WITHDRAW IN SAVE
-					credit.setBalance(flbalance);		// CALL TO SET BALANCE METHOD
+					dfwithdraw = df.format(withdraw);	// FORMATS WITHDRAW TO PRECISION OF TWO DECIMAL PLACES		
+					credit.setWithdraw(withdraw);		// CALL TO SET DEPOSIT WITHDRAW IN CREDIT
+					flbalance = credit.getSubWd();		// CALL TO GET SUBTRACTING WITHDRAW IN SAVE
+					dfbalance = df.format(flbalance);	// FORMATS FLBALANCE TO PRECISION OF TWO DECIMAL PLACES
+					credit.setBalance(flbalance);		// CALL TO SET BALANCE METHOD IN CREDIT
 					
-					updateWindow(account, credLine, flbalance);		// CALL TO UPDATE WINDOW METHOD
+					updateWindowCredit(account, dfbalance, credLine);	// CALL TO UPDATE WINDOW METHOD					
 					
 					/******************/
 					/* INPUTS DEPOSIT */
 					/******************/
-					deposit = inputDouble3(message7, heading2, credLine);	// CALL TO INPUT DOUBLE
-					df.format(deposit);				// FORMATS DEPOSIT TO PRECISION OF TWO DECIMAL PLACES
-				
-					credit.setWithdraw(deposit);	// CALL TO SET DEPOSIT METHOD IN CREDIT
-					save.getSubWd();				// CALL TO GET ADD DEPOSIT METHOD IN SAVE
-				
-					updateWindow(account, credLine, flbalance);		// CALL TO UPDATE WINDOW METHOD
+					deposit = inputDouble3(message7, heading2, flbalance);	// CALL TO INPUT DOUBLE
+					dfdeposit = df.format(deposit);		// FORMATS DEPOSIT TO PRECISION OF TWO DECIMAL PLACES
+					credit.setDeposit(deposit);			// CALL TO SET DEPOSIT METHOD IN CREDIT
+					flbalance = credit.getAddDep();		// CALL TO GET ADD DEPOSIT METHOD IN SAVE
+					dfbalance = df.format(flbalance);	// FORMATS FLBALANCE TO PRECISION OF TWO DECIMAL PLACES
+					credit.setBalance(flbalance);		// CALL TO SET BALANCE METHOD IN CREDIT
+					
+					updateWindowCredit(account, dfbalance, credLine);			// CALL TO UPDATE WINDOW METHOD
 				
 					/*******************/
 					/* INPUTS INTEREST */
 					/*******************/
 					interest = inputInt(message4, heading4);	// CALL TO INPUT INT METHOD
-				
+					credit.setInterest(interest);				// CALL TO SET INTEREST METHOD
+					
 					/***************/
 					/* INPUTS TIME */
 					/***************/
 					time  = inputInt(message5, heading5);		// CALL TO INPUT INT METHOD
-			
+					credit.setTime(time);						// CALL TO SET TIME METHOD
+					
 					/***************/
 					/* INPUTS RATE */
 					/***************/
-					rate = optionRate();	// CALL TO OPTION RATE METHOD
+					rate = 12;				// INTIALIZES TO A SET VALUE 
+					credit.setRate(rate);	// CALL TO SET RATE METHOD
 					
 					/***********************/
 					/* CALCULATION SECTION */
@@ -163,13 +175,17 @@ public class MainBank
 					/* CALCULATES ACCRUED DEBT */
 					/***************************/
 					flbalance = credit.getSubBal();		// CALL TO GET SUB BALANCE METHOD
+					dfbalance = df.format(flbalance);	// FORMATS FINAL DECIMAL TO TWO DECIMAL PLACES
+					credit.setBalance(flbalance);		// CALL TO SET BALANCE METHOD IN CREDIT
+					
+					updateWindowCredit(account, dfbalance, credLine);	// CALL TO UPDATE WINDOW METHOD
 					
 					/**************************************************************/
 					/* IF STATEMENT TO CHECK IF BALANCE IS MORE THAN CREDIT LIMIT */
 					/**************************************************************/
 					if(flbalance > credLine)
 					{
-						ErrorMessage(error4);		// CALL TO ERROR MESSAGE
+						ErrorMessage(error4);	// CALL TO ERROR MESSAGE
 					}
 				}
 				while(flbalance < credLine);
@@ -177,7 +193,7 @@ public class MainBank
 				/******************/
 				/* OUTPUT SECTION */
 				/******************/
-				outputCredit(credit, flbalance, credLine);
+				outputCredit(credit, df, flbalance, credLine);
 			}
 			
 			/**************************************************/
@@ -185,20 +201,18 @@ public class MainBank
 			/**************************************************/
 			else if (account == "Savings")
 			{
-				credLine = 0;		// INITALIZES CREDIT LINE SO UPDATE WINDOW METHOD CAN BE USED
+				credLine = 0;	// INITALIZES CREDIT LINE SO UPDATE WINDOW METHOD CAN BE USED
 				
 				/******************/
 				/* INPUTS BALANCE */
 				/******************/
 				stbalance = inputDouble1(message1, heading1);	// CALL TO INPUT DOUBLE
 				
-				flbalance = stbalance;			// ASSIGNS FINAL BALANCE TO STARTING  
-												// BALANCE FOR FUTURE CALCULATIONS
-				df.format(flbalance);			// FORMATS FLBALANCE TO PRECISION OF TWO DECIMAL PLACES
-				
-				save.setBalance(flbalance);		// CALL TO SET BALANCE METHOD IN SAVE
-				
-				updateWindow(account, credLine, flbalance);		// CALL TO UPDATE WINDOW METHOD
+				flbalance = stbalance;					// ASSIGNS FINAL BALANCE TO STARTING  
+														// BALANCE FOR FUTURE CALCULATIONS
+				dfbalance = df.format(flbalance);		// FORMATS FLBALANCE TO PRECISION OF TWO DECIMAL PLACES
+				save.setBalance(flbalance);				// CALL TO SET BALANCE METHOD IN SAVE
+				updateWindowSave(account, dfbalance);	// CALL TO UPDATE WINDOW METHOD
 				
 				/*****************************************/
 				/* LOOP TO RE-INPUT WITHDRAW AND DEPOSIT */
@@ -209,44 +223,40 @@ public class MainBank
 					/* INPUTS DEPOSIT */
 					/******************/
 					deposit = inputDouble1(message2, heading2);	// CALL TO INPUT DOUBLE
-					df.format(deposit);							// FORMATS DEPOSIT TO PRECISION OF TWO DECIMAL PLACES
+					dfdeposit = df.format(deposit);				// FORMATS DEPOSIT TO PRECISION OF TWO DECIMAL PLACES
 				
-					save.setDeposit(deposit);		// CALL TO SET DEPOSIT METHOD IN SAVE
-					save.getAddDep();				// CALL TO GET ADD DEPOSIT METHOD IN SAVE
-				
-					updateWindow(account, credLine, flbalance);		// CALL TO UPDATE WINDOW METHOD
-				
+					save.setDeposit(deposit);				// CALL TO SET DEPOSIT METHOD IN SAVE
+					save.getAddDep();						// CALL TO GET ADD DEPOSIT METHOD IN SAVE
+					dfbalance = df.format(flbalance);		// FORMATS WITHDRAW TO PRECISION OF TWO DECIMAL PLACES
+					updateWindowSave(account, dfbalance);	// CALL TO UPDATE WINDOW METHOD
+					
 					/*******************/
 					/* INPUTS WITHDRAW */
 					/*******************/
 					withdraw = inputDouble2(message3, heading3, stbalance, deposit);	// CALL TO INPUT DOUBLE
-					df.format(withdraw);			// FORMATS WITHDRAW TO PRECISION OF TWO DECIMAL PLACES		
-				
-					save.setWithdraw(withdraw);		// CALL TO SET DEPOSIT WITHDRAW IN SAVE
-					save.getSubWd();				// CALL TO GET SUBTRACTING WITHDRAW IN SAVE
-				
-					updateWindow(account, credLine, flbalance);		// CALL TO UPDATE WINDOW METHOD
-				
+					dfwithdraw = df.format(withdraw);		// FORMATS WITHDRAW TO PRECISION OF TWO DECIMAL PLACES		
+					save.setWithdraw(withdraw);				// CALL TO SET DEPOSIT WITHDRAW IN SAVE
+					flbalance = save.getSubWd();			// CALL TO GET SUBTRACTING WITHDRAW IN SAVE
+					dfbalance = df.format(flbalance);		// FORMATS WITHDRAW TO PRECISION OF TWO DECIMAL PLACES
+					updateWindowSave(account, dfbalance);	// CALL TO UPDATE WINDOW METHOD
+					
 					/*******************/
 					/* INPUTS INTEREST */
 					/*******************/
-					interest = inputInt(message4, heading4);	// CALL TO INPUT INT METHOD
-				
-					save.setInterest(interest);		// CALL TO SET INTEREST IN SAVINGS
+					interest = inputInt(message4, heading4);// CALL TO INPUT INT METHOD
+					save.setInterest(interest);	// CALL TO SET INTEREST IN SAVINGS
 				
 					/***************/
 					/* INPUTS TIME */
 					/***************/
-					time = inputInt(message5, heading5);		// CALL TO INPUT INT METHOD
-			
-					save.setTime(time);				// CALL TO SET TIME IN SAVINGS
+					time = inputInt(message5, heading5);	// CALL TO INPUT INT METHOD
+					save.setTime(time);			// CALL TO SET TIME IN SAVINGS
 				
 					/***************/
 					/* INPUTS RATE */
 					/***************/
-					rate = optionRate();			// CALL TO OPTION RATE METHOD
-				
-					save.setRate(rate);				// CALL TO SET RATE IN SAVINGS
+					rate = 12;				// INTIALIZES TO A SET VALUE 
+					save.setRate(rate);		// CALL TO SET RATE IN SAVINGS
 				
 					/***********************/
 					/* CALCULATION SECTION */
@@ -255,11 +265,11 @@ public class MainBank
 					/********************************/
 					/* CALCULATES COMPOUND INTEREST */
 					/********************************/
-					save.getAddBal();				// CALL TO GET THE BALANCE METHOD IN SAVINGS
+					flbalance = save.getAddBal();			// CALL TO GET THE BALANCE METHOD IN SAVINGS
+					dfbalance = df.format(flbalance);		// FORMATS FLBALANCE TO PRECISION OF TWO DECIMAL PLACES
+					updateWindowSave(account, dfbalance);	// CALL TO UPDATE WINDOW METHOD
 					
-					updateWindow(account, credLine, flbalance);		// CALL TO UPDATE WINDOW METHOD
-				
-					redo = redoBank();				// CALL TO REDO BANK METHOD
+					redo = redoBank();			// CALL TO REDO BANK METHOD
 				}
 				while(redo == 0);
 				
@@ -280,45 +290,34 @@ public class MainBank
 				/* INPUTS BALANCE */
 				/******************/
 				stbalance = inputDouble1(message1, heading1);	// CALL TO INPUT DOUBLE
+				flbalance = stbalance;				// ASSIGNS FINAL BALANCE TO STARTING  
+													// BALANCE FOR FUTURE CALCULATIONS
+				dfbalance = df.format(flbalance);	// FORMATS FLBALANCE TO PRECISION OF TWO DECIMAL PLACES
+				check.setBalance(flbalance);		// CALL TO SET BALANCE METHOD IN CHECK
 				
-				flbalance = stbalance;			// ASSIGNS FINAL BALANCE TO STARTING  
-												// BALANCE FOR FUTURE CALCULATIONS
-				df.format(flbalance);			// FORMATS FLBALANCE TO PRECISION OF TWO DECIMAL PLACES
+				updateWindowCheck(account, dfbalance);	// CALL TO UPDATE WINDOW METHOD
 				
-				check.setBalance(flbalance);	// CALL TO SET BALANCE METHOD IN CHECK
-				
-				updateWindow(account, credLine, flbalance);		// CALL TO UPDATE WINDOW METHOD
-				
-				/******************/
-				/* INPUTS DEPOSIT */
-				/******************/
+				/*********************************/
+				/* INPUTS AND CALCULATES DEPOSIT */
+				/*********************************/
 				deposit = inputDouble1(message2, heading2);	// CALL TO INPUT DOUBLE
-				df.format(deposit);							// FORMATS DEPOSIT TO PRECISION OF TWO DECIMAL PLACES
+				dfdeposit = df.format(deposit);				// FORMATS DEPOSIT TO PRECISION OF TWO DECIMAL PLACES
 				
-				check.setDeposit(deposit);		// CALL TO SET DEPOSIT METHOD IN CHECK
+				check.setDeposit(deposit);			// CALL TO SET DEPOSIT METHOD IN CHECK
+				flbalance = check.getAddBal();		// CALL TO ADDING BALANCE METHOD AND CALCULATES BALANCE
+				dfbalance = df.format(flbalance);	// FORMATS BALANCE TO PRECISION OF TWO DECIMAL PLACES
+				check.setBalance(flbalance);		// CALL TO SET BALANCE METHOD IN CHECK
 				
-				updateWindow(account, credLine, flbalance);		// CALL TO UPDATE WINDOW METHOD
+				updateWindowCheck(account, dfbalance);	// CALL TO UPDATE WINDOW METHOD
 				
-				/*******************/
-				/* INPUTS WITHDRAW */
-				/*******************/
+				/**********************************/
+				/* INPUTS AND CALCULATES WITHDRAW */
+				/**********************************/
 				withdraw = inputDouble2(message3, heading3, stbalance, deposit);		// CALL TO INPUT DOUBLE
-				df.format(withdraw);			// FORMATS WITHDRAW TO PRECISION OF TWO DECIMAL PLACES		
-				
-				check.setWithdraw(withdraw);	// CALL TO SET DEPOSIT WITHDRAW IN CHECK
-				
-				/***********************/
-				/* CALCULATION SECTION */
-				/***********************/
-				
-				/**********************/
-				/* CALCULATES BALANCE */
-				/**********************/
-				flbalance = check.getAddBal();		// CALL TO ADDING BALANCE METHOD
+				dfwithdraw = df.format(withdraw);	// FORMATS WITHDRAW TO PRECISION OF TWO DECIMAL PLACES		
+				check.setWithdraw(withdraw);		// CALL TO SET DEPOSIT WITHDRAW IN CHECK
 				flbalance = check.getSubWd();		// CALL TO SUBTRACTING WITHDRAW METHOD
-				
-				df.format(flbalance);				// FORMATS BALANCE TO PRECISION OF TWO DECIMAL PLACES
-				
+				dfbalance = df.format(flbalance);	// FORMATS BALANCE TO PRECISION OF TWO DECIMAL PLACES
 				check.setBalance(flbalance);		// CALL TO SET BALANCE METHOD IN CHECK
 				
 				/******************/
@@ -438,7 +437,7 @@ public class MainBank
 		return num;			// RETURNS NUM
 	}
 	
-	public static double inputDouble3(String str, String anstr, double credLine)
+	public static double inputDouble3(String str, String anstr, double flbalance)
 	/*************************************************/
 	/* PRECONDITION - NEEDS DOUBLE VALUE	 		 */
 	/* POSTCONDITION - GETS DOUBLE VALUE			 */
@@ -469,12 +468,12 @@ public class MainBank
 			/*******************************/
 			/* IF STATEMENT TO ERROR CHECK */
 			/*******************************/
-			if((num < 0) || (num > credLine))
+			if((num < 0) || (num > flbalance))
 			{
 				ErrorMessage(error2);		// CALL TO ERROR MESSAGE
 			}
 		}
-		while((num < 0) || (num > credLine));
+		while((num < 0) || (num > flbalance));
 		
 		/******************/
 		/* RETURN SECTION */
@@ -507,8 +506,8 @@ public class MainBank
 					str,
 					anstr,
 					JOptionPane.QUESTION_MESSAGE);
-			num = Integer.parseInt(inum);		// ASSIGNS THE STRING IBALANCE 
-												// TO THE INTEGER BALANCE
+			num = Integer.parseInt(inum);		// ASSIGNS THE STRING INUM 
+												// TO THE INTEGER NUM
 			
 			/*******************************/
 			/* IF STATEMENT TO ERROR CHECK */
@@ -588,81 +587,6 @@ public class MainBank
 		return num;			// RETURNS NUM
 	}
 	
-	public static int optionRate()
-	/*******************************************************/
-	/* PRECONDITION - NEEDS TO CHOOSE RATE OF CREDIT OR    */
-	/* 				  SAVINGS ACCOUNT 					   */
-	/* POSTCONDITION - GETS TO CHOOSE TYPE OFCREDIT OR     */
-	/* 				   SAVINGS ACCOUNT					   */
-	/*******************************************************/
-	{
-		/********************/
-		/* VARIABLE SECTION */
-		/********************/
-		String num;			// REUSUABLE STRING INPUT 
-		int inum;
-		
-		/*************************************/
-		/* MAKES AN ARRAY FOR DROP-DOWN MENU */
-		/*************************************/
-		Object options[] = {"Weekly", "Bi-Weekly", "Monthly", 
-						   "Quarterly", "Annually"};
-		
-		num = (String)JOptionPane.showInputDialog(
-				new JDialog(),
-				"Choose the rate in which you compound your money:",
-				"Input Rate",
-				JOptionPane.QUESTION_MESSAGE,
-				null,
-				options,
-				"");
-		
-		/******************************************/
-		/* IF STATEMENT TO CHECK IF NUM IS WEEKLY */
-		/******************************************/
-		if (num == "Weekly")
-		{
-			inum = 52;
-		}
-		
-		/**************************************************/
-		/* ELSE IF STATEMENT TO CHECK IF NUM IS BI-WEEKLY */
-		/**************************************************/
-		else if (num == "Bi-Weekly")
-		{
-			inum = 26;
-		}
-		
-		/************************************************/
-		/* ELSE IF STATEMENT TO CHECK IF NUM IS MONTHLY */
-		/************************************************/
-		else if (num == "Monthly")
-		{
-			inum = 12;
-		}
-		
-		/**************************************************/
-		/* ELSE IF STATEMENT TO CHECK IF NUM IS QUARTERLY */
-		/**************************************************/
-		else if (num == "Quarterly")
-		{
-			inum = 4;
-		}
-		
-		/**********************************************/
-		/* ELSE STATEMENT TO CHECK IF NUM IS ANNUALLY */
-		/**********************************************/
-		else 
-		{
-			inum = 1;
-		}
-		
-		/******************/
-		/* RETURN SECTION */
-		/******************/
-		return inum;		// RETURNS INUM 
-	}
-	
 	public static void outputCheck(Check check, double stbalance)
 	/************************************************************/
 	/* PRECONDITION - NEEDS PROGRAM OUTPUT FOR CHECKING ACCOUNT */
@@ -685,24 +609,37 @@ public class MainBank
 				JOptionPane.INFORMATION_MESSAGE);
 	}
 	
-	public static void outputCredit(Credit credit, double flbalance, double credLine)
+	public static void outputCredit(Credit credit, DecimalFormat df, double flbalance, double credLine)
 	/**********************************************************/
 	/* PRECONDITION - NEEDS PROGRAM OUTPUT FOR CREDIT ACCOUNT */
 	/* POSTCONDITION - CREATES WIMDOW TO SHOW				  */
 	/* 				   OUTPUT STATEMENTS FOR CREDIT ACCOUNT   */
 	/**********************************************************/
 	{
+		/********************/
+		/* VARIABLE SECTION */
+		/********************/
+		double diff;		// VALUE FOR HOW MUCH OVER CREDIT LIMIT USER IS
+		String dfdiff;		// STRING FORM OF DIFF
+		
+		/***********************/
+		/* CALCULATION SECTION */
+		/***********************/
+		diff = (flbalance - credLine);	// CALCULATES HOW MUCH USER IS OVER CREDIT LIMIT
+		dfdiff = df.format(diff);		// FORMATS THE DEBT TO HAVE TWO DECIMAL PLACES
+		
 		/******************/
 		/* OUTPUT SECTION */
 		/******************/
+		
 		/***********************************/
 		/* MAKES OUTPUT INFORMATION WINDOW */
 		/***********************************/
 		JOptionPane.showMessageDialog(
 				null,
 				credit.toString() + 
-				"Your credit card has been denied since you owe the bank" +
-				"\n" + "$" + (flbalance - credLine),
+				"\nYour credit card has been denied since you have gone" +
+				"\n" + "$" + dfdiff + " over your credit limit.",
 				"Output Section for Checking Account",
 				JOptionPane.INFORMATION_MESSAGE);
 	}
@@ -724,7 +661,7 @@ public class MainBank
 		JOptionPane.showMessageDialog(
 				null,
 				save.toString() + 
-				"\nYou started with a starting balance of $" + stbalance + ".",
+				"\nYour starting balance was $" + stbalance + ".",
 				"Output Section for Savings Account",
 				JOptionPane.INFORMATION_MESSAGE);
 	}
@@ -781,7 +718,7 @@ public class MainBank
 	public static int runAgain()
 	/************************************************/
 	/* PRECONDITION - NEEDS CONFIRM DIALOG BOX		*/
-	/* POSTCONDITION - CREATES WIMDOW TO CONFIRM IF	*/
+	/* POSTCONDITION - CREATES WINDOW TO CONFIRM IF	*/
 	/* 				   USER WANTS TO RE-RUN PROGRAM	*/
 	/************************************************/
 	{
@@ -806,41 +743,52 @@ public class MainBank
 		return num;			// RETURNS NUM
 	}
 	
-	public static void updateWindow(String account, double credLine, double flbalance)
+	public static void updateWindowCheck(String account, String dfbalance)
 	/************************************************/
 	/* PRECONDITION - NEEDS UPDATE OF BALANCE		*/
 	/* POSTCONDITION - GETS UPDATE FOR BALANCE		*/
 	/************************************************/
 	{
-		/**********************************************/
-		/* IF STATEMENT TO CHECK IF ACCOUNT IS CREDIT */
-		/**********************************************/
-		if (account == "Credit")
-		{
 			/***********************/
 			/* MAKES UPDATE WINDOW */
 			/***********************/
 			JOptionPane.showMessageDialog(
 					null,
-					"Your credit card payment balance is: $" + flbalance + 
+					"Your current balance is: $" + dfbalance,
+					"Update Window",
+					JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	public static void updateWindowCredit(String account, String dfbalance, double credLine)
+	/************************************************/
+	/* PRECONDITION - NEEDS UPDATE OF BALANCE		*/
+	/* POSTCONDITION - GETS UPDATE FOR BALANCE		*/
+	/************************************************/
+	{
+			/***********************/
+			/* MAKES UPDATE WINDOW */
+			/***********************/
+			JOptionPane.showMessageDialog(
+					null,
+					"Your credit card payment balance is: $" + dfbalance + 
 					"\n" + "Your credit limit is $ " + credLine,
 					"Update Window",
 					JOptionPane.INFORMATION_MESSAGE);
-		}
-		
-		/************************************************/
-		/* ELSE STATEMENT TO CHECK IF ACCOUNT IS CREDIT */
-		/************************************************/
-		else
-		{
+	}
+	
+	public static void updateWindowSave(String account, String dfbalance)
+	/************************************************/
+	/* PRECONDITION - NEEDS UPDATE OF BALANCE		*/
+	/* POSTCONDITION - GETS UPDATE FOR BALANCE		*/
+	/************************************************/
+	{
 			/***********************/
 			/* MAKES UPDATE WINDOW */
 			/***********************/
 			JOptionPane.showMessageDialog(
 					null,
-					"Your current balance is: $" + flbalance,
+					"Your current balance is: $" + dfbalance,
 					"Update Window",
 					JOptionPane.INFORMATION_MESSAGE);
-		}
 	}
 }
