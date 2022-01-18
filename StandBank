@@ -186,3 +186,4 @@ abstract public class StandBank
 		return str;				// RETURNS STRING REPRESENTATION OF OBJECT
 	}
 }
+vim: syntax=java
